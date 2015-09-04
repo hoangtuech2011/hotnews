@@ -1,0 +1,560 @@
+@charset "utf-8";
+/*
+body, table{
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:normal;
+	font-style:normal;
+}
+*/
+#div_quick{
+	margin-bottom:20px;
+    height: 25px;
+}
+#div_quick_search{
+	float:right;
+	width:300px;
+}
+#txt_quick_search{
+    width: 300px;
+    /*
+    background-image:url(../../images/icons/zoom.png);
+    background-repeat:no-repeat;
+    background-position:10px center;
+    padding-left: 30px;
+    padding-right: 20px;
+    */
+}
+.k-text-css{
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 300px !important;
+}
+.k-textarea{
+    width: 300px;
+    height: 50px;
+    resize: none;
+}
+#div_title{
+    padding: 0px 0px 0px 20px;
+    margin-bottom:10px;
+}
+.button_css{
+    width:100px;
+    /*height:30px;*/
+    font-weight:700;
+}
+table.list_table tr td{
+
+}
+#div_form{
+	margin-right: 302px;
+}
+#div_title{
+	padding: 0px 0px 0px 20px;
+	margin-bottom:10px;
+}
+.div_details {
+	padding-top:20px !important;
+}
+.div_errors{
+	margin:20px;
+	padding:10px;
+	text-align:left;
+	font-size:11px;
+	color:#F00;
+}
+.div_buttons{
+	margin-top:20px;
+	padding:10px;
+	text-align:center;
+}
+ul.icons{
+	list-style-type:none;
+	height:40px;
+	margin:0;
+}
+ul.icons li{
+	list-style-type:none;
+	float:right;
+	margin:0 0 0 5px;
+	cursor:pointer;
+}
+ul.icons li:hover{
+}
+ul.icons li img{
+	border:none;
+}
+ul.icons li p{
+	text-align:center;
+	margin:0px;
+	font-size:11px;
+}
+ul.icons li a{
+	color:inherit;
+	text-decoration:none;
+}
+
+.k-grid a.k-button,.k-grid span.k-button {
+    min-width: 16px !important;
+}
+.k-grid span.k-icon{
+	/*background:none !important;*/
+}
+
+a.k-grid-View {
+    /*
+	max-width:16px !important;
+    min-height: 16px !important;
+	margin: 1px !important;
+	background-color:transparent !important;
+    background-image:url("../../img/icons/view.png") !important;
+    background-repeat:no-repeat !important;
+    border:none !important;
+    */
+}
+a.k-grid-Edit {
+    /*
+	max-width:16px !important;
+    min-height: 16px !important;
+	margin: 1px !important;
+	background-color:transparent !important;
+    background-image:url("../../img/icons/tab_edit.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+    */
+}
+a.k-grid-Edit-order-price {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/order_edit_price.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+a.k-grid-Print-order-plan {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/printer.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+a.k-grid-Delete {
+    /*
+	max-width:16px !important;
+    min-height: 16px !important;
+	margin: 1px !important;
+	background-color:transparent !important;
+    background-image:url("../../img/icons/delete.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+    */
+    float: right !important;
+}
+a.k-grid-Kitting {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/money_add.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+a.k-grid-Print {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/printer_add.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+a.k-grid-Clone {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/layers.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+
+a.k-grid-switchUser {
+    max-width:16px !important;
+    min-height: 16px !important;
+    margin: 1px !important;
+    background-color:transparent !important;
+    background-image:url("../../img/icons/user.png") !important;
+    background-repeat:no-repeat;
+    border:none !important;
+}
+.k-item{
+	text-align:left !important;
+}
+select option{
+    color: inherit;
+    font-size: inherit;
+}
+#treeview .k-sprite {
+	/*background-image: url("../../img/coloricons-sprite.png");*/
+}
+
+.rootfolder { background-position: 0 0; }
+.folder { background-position: 0 -16px; }
+.pdf { background-position: 0 -32px; }
+.html { background-position: 0 -48px; }
+.image { background-position: 0 -64px; }
+/*
+.group{
+	background-image:url(../../img/icons/group.png) !important;
+	background-repeat:no-repeat;
+}
+.contact{
+	background-image:url(../../img/icons/contact.png) !important;
+	background-repeat:no-repeat;
+}
+.user{
+	background-image:url(../../img/icons/user.png) !important;
+	background-repeat:no-repeat;
+}
+.companys{
+	background-image:url(../../img/icons/companys.png) !important;
+	background-repeat:no-repeat;
+}
+.company{
+	background-image:url(../../img/icons/company.png) !important;
+	background-repeat:no-repeat;
+}
+.location{
+	background-image:url(../../img/icons/location.png) !important;
+	background-repeat:no-repeat;
+}
+.role{
+	background-image:url(../../img/icons/role.png) !important;
+	background-repeat:no-repeat;
+}
+.package{
+	background-image:url(../../img/icons/package.png) !important;
+	background-repeat:no-repeat;
+}
+.material{
+	background-image:url(../../img/icons/material.png) !important;
+	background-repeat:no-repeat;
+}
+.product{
+	background-image:url(../../img/icons/product.png) !important;
+	background-repeat:no-repeat;
+}
+.tag{
+	background-image:url(../../img/icons/tag.png) !important;
+	background-repeat:no-repeat;
+}
+.pgroup{
+	background-image:url(../../img/icons/pgroup.png) !important;
+	background-repeat:no-repeat;
+}
+.layout{
+	background-image:url(../../img/icons/layout.png) !important;
+	background-repeat:no-repeat;
+}
+.area{
+	background-image:url(../../img/icons/area.png) !important;
+	background-repeat:no-repeat;
+}
+.products{
+	background-image:url(../../img/icons/products.png) !important;
+	background-repeat:no-repeat;
+}
+.orders{
+	background-image:url(../../img/icons/orders.png) !important;
+	background-repeat:no-repeat;
+}
+.order{
+	background-image:url(../../img/icons/order.png) !important;
+	background-repeat:no-repeat;
+}
+.ship{
+	background-image:url(../../img/icons/ship.png) !important;
+	background-repeat:no-repeat;
+}
+.support{
+	background-image:url(../../img/icons/support.png) !important;
+	background-repeat:no-repeat;
+}
+.setting{
+	background-image:url(../../img/icons/setting.png) !important;
+	background-repeat:no-repeat;
+}
+.system{
+	background-image:url(../../img/icons/system.png) !important;
+	background-repeat:no-repeat;
+}
+.email{
+	background-image:url(../../img/icons/email.png) !important;
+	background-repeat:no-repeat;
+}
+.message{
+	background-image:url(../../img/icons/comment.png) !important;
+	background-repeat:no-repeat;
+}
+.threshold{
+	background-image:url(../../img/icons/threshold.png) !important;
+	background-repeat:no-repeat;
+}
+*/
+span.tooltips, span.tooltip1s {
+    width: 20px;
+    height: 20px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
+    border: 0;
+    -moz-box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    -moz-transition:  -moz-box-shadow .3s;
+    -webkit-transition:  -webkit-box-shadow .3s;
+    transition:  box-shadow .3s;
+    background-image:url(../../img/icons/help.png) !important;
+    background-repeat:no-repeat;
+    background-position: center center;
+}
+
+span.tooltips:hover, span.tooltip1s:hover {
+    -moz-box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    -moz-transition:  -moz-box-shadow .3s;
+    -webkit-transition:  -webkit-box-shadow .3s;
+    transition:  box-shadow .3s;
+}
+.k-required{
+    color: #990000;
+    font-size: 11px;
+}
+.k-grid th.k-header{
+    font-weight: 700 !important;
+    text-align: center !important;
+}
+.fielddis{
+	width: auto;
+	float:left;
+	margin:10px 10px;
+	padding:0;
+}
+.fielddis label{
+	width:100px;
+	margin:0;
+	float:left;
+	text-align:right;
+	padding-right:5px;
+	line-height:26px;
+}
+.dismaterial{
+	width:94%!important;
+}
+/*
+.customCheckBox{
+    padding: 2px;
+    margin: 2px;
+}
+.customCheckBox input[type='checkbox']{
+    display:none;
+}
+.customCheckBox label{
+    font-size: 18px;
+    padding-left:35px;
+    background: url(../../img/custom-checkbox.png) no-repeat;
+}
+
+.customCheckBox label:hover{
+    background-position: 0px -32px;
+}
+
+.customCheckBox label.checked{
+    background-position: 0px -64px;
+}
+*/
+
+
+.checkbox,
+.radio{
+    /* Enable absolute positioning of the hidden form controls */
+    position:relative;
+    /* Just a bit of space. */
+    margin-bottom:0.5em;
+    /*
+    Match line-height to the height of the replacement image to ensure it
+    doesn't get clipped
+    */
+    line-height:22px;
+}
+fieldset :last-child {
+    margin-bottom:0;
+}
+/* Position and hide the real checkboxes and radio buttons */
+.checkbox input[type="checkbox"][data-related="checkbox"],
+input[type="radio"][data-related="radio"] {
+    position:absolute;
+    /* Match the image dimensions */
+    width:22px;
+    height:22px;
+    /* Reset anything that could peek out or interfere with dimensions */
+    overflow:hidden;
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    opacity:0;
+}
+/*
+Insert a pseudo element inside each label and give it a background
+image that will become the custom checkbox or radio button.
+Using inline-block lets you use vertical-align to adjust it vertically
+as needed.
+*/
+input[type="checkbox"][data-related="checkbox"] + label:before,
+input[type="radio"][data-related="radio"] + label:before {
+    display:inline-block;
+    width:22px;
+    height:22px;
+    margin-right:4px;
+    background:url(../../img/icons/other/radio-checkbox.png) no-repeat;
+    content:" ";
+    vertical-align:top;
+}
+/*
+Position the background image differently depending on the state of each
+checkbox and radio button.
+*/
+input[type="radio"][data-related="radio"]:focus + label:before {
+    background-position:0 -22px;
+}
+input[type="radio"][data-related="radio"]:checked + label:before {
+    background-position:0 -44px;
+}
+input[type="radio"][data-related="radio"]:checked:focus + label:before {
+    background-position:-0 -66px;
+}
+input[type="checkbox"][data-related="checkbox"] + label:before {
+    background-position:0 -88px;
+}
+input[type="checkbox"][data-related="checkbox"]:focus + label:before {
+    background-position:0 -110px;
+}
+input[type="checkbox"][data-related="checkbox"]:checked + label:before {
+    background-position:0 -132px;
+}
+input[type="checkbox"][data-related="checkbox"]:disabled + label:before {
+    background-position:0 -198px;
+}
+input[type="checkbox"][data-related="checkbox"]:checked:disabled + label:before {
+    background-position:0 -176px;
+}
+input[type="checkbox"][data-related="checkbox"]:checked:focus + label:before {
+    background-position:0 -154px;
+}
+.customRadio input[type="radio"][data-related="radio"]:disabled + label:before {
+    background-position:0 -242px;
+}
+.customRadio input[type="radio"][data-related="radio"]:checked:disabled + label:before {
+    background-position:0 -220px;
+}
+
+/* For DropDownList Account */
+.dropdown-header {
+    font-size: 1.2em;
+}
+
+.dropdown-header > span {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: left;
+    display: inline-block;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    padding: .3em .6em;
+    width: 362px;
+}
+
+.dropdown-header > span:first-child {
+    width: 82px;
+    border-left-width: 0;
+}
+
+.selected-value {
+    float: left;
+    width: 16px;
+    margin: 3px 4px;
+}
+#txt_account_id-list .k-item > span{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    vertical-align: top;
+    min-height: 95px;
+    width: 79%;
+    padding: .6em 0 0 .6em;
+}
+
+#txt_account_id-list .k-item > span:first-child{
+    width: 77px;
+    border-left-width: 0;
+    padding: .6em 0 0 0;
+}
+
+#txt_account_id-list img {
+    -moz-box-shadow: 0 0 2px rgba(0,0,0,.4);
+    -webkit-box-shadow: 0 0 2px rgba(0,0,0,.4);
+    box-shadow: 0 0 2px rgba(0,0,0,.4);
+    width: 70px;
+    height: 77px;
+}
+
+#txt_account_id-list h3 {
+    font-size: 1.6em;
+    margin: 0;
+    padding: 0;
+}
+
+#txt_account_id-list p {
+    margin: 0;
+    padding: 0;
+}
+
+html.k-material .selected-value {
+    margin: 6px 0 0 10px;
+}
+
+html.k-material .dropdown-header > span {
+    border: 0;
+}
+html.k-material .dropdown-header > span {
+    width: 354px;
+}
+html.k-material .dropdown-header > span:first-child {
+    width: 90px;
+}
+html.k-material #txt_account_id-list .k-item > span{
+    min-height: 80px;
+    border-width: 0 0 1px 0;
+}
+html.k-material #txt_account_id-list img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+html.k-material #txt_account_id-list h3 {
+    font-size: 1.2em;
+    line-height: 1em;
+    margin-top: .5em;
+}
+
+/* End For DropDownList Account */

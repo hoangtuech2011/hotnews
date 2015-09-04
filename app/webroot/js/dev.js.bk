@@ -1,0 +1,857 @@
+
+//Default param email checked
+var number = new RegExp(/^[0-9]+$/);
+var alpha= new RegExp(/^[a-zA-Z\s]+$/);
+var alphaNoSpace= new RegExp(/^[a-zA-Z]+$/);
+var alpha_number = new RegExp(/^[A-Za-z0-9]+$/);
+var alpha_numberSpace = new RegExp(/^[A-Za-z0-9\s]*$/);
+var twoSpace = new RegExp(/\s{2,}/);
+var oneSpace = new RegExp(/\s{1,}/g);
+var address = new RegExp(/^[A-Za-z0-9/-]/);
+var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+function checkOneMoreSpaceAndEmpty(string)
+{
+	str_trim=$.trim(string);
+	if((string.length-str_trim.length)>1 || twoSpace.test(string))
+		return true;
+	return false;
+}
+function checkSpaceAndEmpty(string)
+{
+	if(string.indexOf(' ')==0 && $.trim(string)!="") 
+			return true;
+	return false;  
+}
+function addFieldDefault() {
+	if($("#param_fields").val()==""){
+		$( "#email > .icheckbox_minimal" ).addClass('checked');
+		$("#param_value").val('{"0":"email"}');
+		$("#param_fields").val('email');
+		$("#param_down").val('email');
+	}else{
+		loadparam();
+	}
+}
+//Compare param_fields list and template
+function compareParam(param_current,param_old){
+	var j=0;
+	var arr_param_old = param_old .split(',');
+	var arr_param_current = param_current .split(',');
+
+	if(arr_param_old.length == arr_param_current.length){
+		for(var i=0;i<arr_param_old.length;i++){
+			var str = arr_param_old[i].toLowerCase().trim();
+			if(jQuery.inArray(str, arr_param_current)!==-1){
+				j++;
+			}
+		}
+	}
+
+	return result = (j==arr_param_current.length) ? true:false; 
+}
+//Action load Template when click
+function calAjaxLoadTmp(id){
+	var editor = CKEDITOR.instances['vietnam'];
+	var status_list = $("#status_list").val();
+	$.ajax({
+		type: "POST",
+		url: "/emails/ajaxLoadDataTmp",
+		data: { id: id }
+		})
+		.done(function( results ) {
+// 			alert( "Data Saved: " + msg );
+			var result = eval(results);	
+			$.each(result, function (item, value) {
+				var id = value.Template.id;
+				var subject = value.Template.subject;
+				var body_vn = value.Template.body_vn;
+				var body_en = value.Template.body_en;
+				var param_fields = value.Template.param_fields;
+				//Case users have choosen list first.
+				if(status_list!=0){
+					var param_fields_list = $("#param_fields").val();
+					//Compare param fields TEMPLATE with param fields LIST
+					var result_compare = compareParam(param_fields,param_fields_list);
+					//if param fields not same
+					if(!result_compare){
+						//Confirm for user
+						var msg_param_compare = confirm("Param fields Template: "+param_fields+"\nParam fields List: "+param_fields_list+"\nNot the same!\nCANCEL for select other Template or OK for use param fields List!")
+						//If user accept will use param_fields of list
+						if(msg_param_compare){
+							CKEDITOR.instances['vietnam'].setData(body_vn);
+							$("#EmailSubject").val(subject);
+							if(body_en!=""){
+								CKEDITOR.instances['english'].setData(body_en);
+								var eng_status = $("#eng_status").val('1');
+								$("li#eng_tab").removeClass('hidden');
+								$("li#eng_tab").removeClass('active');
+								$("li#viet_tab").addClass('active');
+								$("#vietnam").addClass('active');
+							}else{
+								CKEDITOR.instances['english'].setData('');
+								var eng_status = $("#eng_status").val('0');
+								$("li#eng_tab").addClass('hidden');
+								$("li#viet_tab").addClass('active');
+								$("#vietnam").addClass('active');
+								$("#english").removeClass('active');
+							}
+						//else uses choosen other template
+						}else{
+							$("#compose-modal").modal('hide');
+							return false;
+						}
+					}
+				//Case users have not choosen list
+				}else{
+					if(param_fields!=""){
+						var item_param = param_fields.split(',');
+						$.each(item_param, function (i, val) {
+							$( "#"+val+" > .icheckbox_minimal" ).addClass('checked');
+						});
+					}
+					$("#param_fields").val(param_fields);
+					$("#param_down").val(param_fields);
+					$("#EmailSubject").val(subject);
+					CKEDITOR.instances['vietnam'].setData(body_vn);
+					//Check content of body english of template have content or not for enter data
+					if(body_en!=""){
+						CKEDITOR.instances['english'].setData(body_en);
+						var eng_status = $("#eng_status").val('1');
+						$("li#eng_tab").removeClass('hidden');
+						$("li#eng_tab").removeClass('active');
+						$("li#viet_tab").addClass('active');
+						$("#vietnam").addClass('active');
+					}else{
+						CKEDITOR.instances['english'].setData('');
+						var eng_status = $("#eng_status").val('0');
+						$("li#eng_tab").addClass('hidden');
+						$("li#viet_tab").addClass('active');
+						$("#vietnam").addClass('active');
+						$("#english").removeClass('active');
+					}
+				}
+			});
+			$("#compose-modal").modal('hide');
+		});
+}
+//Action Selected param fields
+$( "#select_param" ).bind( "click", function() {
+		var str_parram = "";
+		var str_json = "";
+		var i = 0;
+		var str_arr = "";
+		var html = "";
+		var str_ck = "";
+		var j = 0;
+//		var data_eng = CKEDITOR.instances['english'].getData();
+		$('.modal-body .checked').each(function() {
+			if($(this).parent().attr('id')!='english'){
+				$("li#eng_tab").addClass('hidden');
+				$("li#viet_tab").addClass('active');
+				$(".tab-content #vietnam").addClass('active');
+				$(".tab-content #english").removeClass('active');
+				//CKEDITOR.instances['english'].setData("");
+				$("#eng_status").val('0');
+			}else{
+				$("li#eng_tab").removeClass('hidden');
+				$("#eng_status").val('1');
+				$("li#viet_tab").removeClass('active');
+				$(".tab-content #vietnam").removeClass('active');
+				$("li#eng_tab").addClass('active');
+				$(".tab-content #english").addClass('active');
+				//CKEDITOR.instances['english'].setData(data_eng);
+			}
+		    if(j==0){		    	
+		    	 str_parram = '"'+i+'":"'+$(this).parent().attr('id')+'"';
+		    	 str_arr += $(this).parent().attr('id');
+            	j = 1;
+		    }else{
+		    	str_parram = ',"'+i+'":"'+$(this).parent().attr('id')+'"';
+		    	str_arr += ','+$(this).parent().attr('id');
+		    }
+		    str_json += str_parram;
+		    i++;
+		});
+		var status_eng = $("#eng_status").val();
+		
+		str_json = "{"+str_json+"}";		
+		$("#arr_param").val(str_ck);
+		$("#param_value").val(str_json);
+		$("#param_fields").val(str_arr);
+		$("#param_down").val(str_arr);
+		$("#compose-modals").modal('hide');
+//		if(status_eng=='1'){
+//			$("li#viet_tab").removeClass('active');
+//			$(".tab-content #vietnam").removeClass('active');
+//			$("li#eng_tab").addClass('active');
+//			$(".tab-content #english").addClass('active');
+//			CKEDITOR.instances['english'].setData(data_eng);
+//		}
+});
+//Action load param fields in edit
+function loadparam(){
+	var param_fields = $("#param_fields").val();	
+	var result = param_fields.split(',');
+	$( ".icheckbox_minimal" ).removeClass('checked');
+	$.each(result, function (i, val) {
+		$( "#"+val+" > .icheckbox_minimal" ).addClass('checked');
+	});
+	$("#param_down").val(param_fields);
+}     
+//Date and time picker
+$(function() {
+	$(".datepicker").datepicker({
+	     autoclose: true,
+	     format: 'yyyy-mm-dd',
+		 startDate: "0d",
+	}).datepicker('setDate', new Date());
+	$(".datepicker_rp").datepicker({
+	     autoclose: true,
+	     format: 'yyyy-mm-dd',
+	}).datepicker();
+   $(".timepicker").timepicker({
+	   format: 'HH:mm:ss',
+	   showSeconds:'true',
+	   showInputs: false,
+	   showMeridian: false,
+   });
+});
+//Check valid add new email
+function checkValid(){
+	var eng_status = $("#eng_status").val();
+	var filename = $("#file").val();
+	var param_fields = $("#param_fields").val();
+	var subject = $("#EmailSubject").val();
+	
+	var content_eng = CKEDITOR.instances['english'].getData();
+	var content_vn = CKEDITOR.instances['vietnam'].getData();
+	var ext = $('#file').val().split('.').pop().toLowerCase();
+	var val_list = $("#liste_id").val();
+	var str_error="";
+	if(eng_status=='1' && content_eng=="")
+		str_error+="Body English not empty!</br>";
+	if(content_vn=="")
+		str_error+="Body Vietnamese not empty!</br>";
+	if($.trim(subject) == "" || (checkOneMoreSpaceAndEmpty(subject) && subject.length>0))
+		str_error+="Subject not empty or have character special!</br>";
+	if(param_fields.indexOf('email')==-1)
+		str_error+="Email is value default!</br>";
+	if((filename=="" && val_list=="none") || ($.inArray(ext, ['xls','xlsx'])==-1 && val_list=="none"))
+		str_error+="File upload empty or not true format!</br>";
+	if(str_error=="")
+	{
+		if(eng_status=='0'){
+			CKEDITOR.instances['english'].setData("");
+		}
+		$("#frm_add_email").submit();
+	}
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+//function check valid edit email
+function checkValidEditEmail(){
+	var param_fields_tmp = $("#param_fields_tmp").val();
+	var eng_status = $("#eng_status").val();
+	var filename = $("#file").val();
+	var param_fields = $("#param_fields").val();
+	var subject = $("#EmailSubject").val();
+	var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	var content_eng = CKEDITOR.instances['english'].getData();
+	var content_vn = CKEDITOR.instances['vietnam'].getData();
+	var ext = $('#file').val().split('.').pop().toLowerCase();
+	var val_list = $("#liste_id").val();
+	var flag_compare_param = $("#flag_compare_param").val();
+	var flag_upload = 0;
+	var flag_valid = 0;
+	var str_error ="";
+	if(param_fields_tmp==param_fields){
+		$("#flag_compare_param").val('0');
+	}
+	if(param_fields_tmp!=param_fields && flag_compare_param=='0'){
+		var result = confirm("Param fields have changed.You should upload file again!");
+		if(result){
+			$("#flag_compare_param").val('1');
+		}else{
+			$("#param_fields").val(param_fields_tmp);
+			$("#flag_compare_param").val('0');
+			return false;
+		}
+	}
+	flag_compare_param = $("#flag_compare_param").val();
+	if(flag_compare_param=='1'){
+		if((filename=="" && val_list=="none") || ($.inArray(ext, ['xls','xlsx'])==-1 && val_list=="none")){
+			str_error += "File upload empty or not true format! </br>";
+		}else{
+			flag_upload = 1;
+		}
+	}else{
+		flag_upload = 1;
+	}
+	
+	if(eng_status=='1' && content_eng=="")
+		str_error +="Body English not empty!</br>";
+	if(content_vn=="")
+		str_error +="Body Vietnam not empty!</br>";
+	if($.trim(subject) == "" || (checkOneMoreSpaceAndEmpty(subject) && subject.length>0))
+		str_error +="Subject not empty or have character special!</br>";
+	if(param_fields.indexOf('email')==-1){
+		str_error +="Email is value default!";
+	}else{
+		flag_valid = 1;
+	}
+	if(str_error=="")
+	{
+		if(flag_upload == 1 && flag_valid == 1){
+			$("#form_edit_email").submit();
+		}
+	}
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+//Check Valid add template
+function checkValidTemp(){
+	var status_is_sftp = $("#TemplateIsSftpTemplate").is(':checked');
+	var id_temp_sftp = $("#id_temp_sftp").val();
+	var eng_status = $("#eng_status").val();
+	var subject = $("#TemplateSubject").val();
+	//var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	var param_fields = $("#param_fields").val();
+	var content_eng = CKEDITOR.instances['english'].getData();
+	var content_vn = CKEDITOR.instances['vietnam'].getData();
+	var str_error="";
+	if($.trim(subject) == "" || (checkOneMoreSpaceAndEmpty(subject) && subject.length>0))
+		str_error+="Subject not empty or have character special!</br>";
+	if($.trim(content_vn)=="")
+		str_error+="Body Vietnam not empty!</br>";	
+	if(eng_status=='1' && $.trim(content_eng)=="")
+		str_error+="Body English not empty!</br>";	
+	if(param_fields.indexOf('email')==-1)
+		str_error+="Email is value default!</br>";	
+//	else if(status_is_sftp==true){
+//		if(id_temp_sftp!=""){
+//			var result = confirm("Other template have set sftp.Do you want sftp for this template?");
+//			if(result){			
+//				$.ajax({
+//					type: "POST",
+//					url: "/templates/update_sftp",
+//					data: { id: id_temp_sftp},
+//					beforeSend : function(){
+//						$(".modal-body").addClass('box');
+//					},
+//					})
+//					
+//					.done(function( results ) {
+//						if(eng_status=='0'){
+//							CKEDITOR.instances['english'].setData("");
+//						}
+//						//$("#frm_add_email").submit();
+//					});
+//			}else{
+//				return false;
+//			}
+//		}
+//	}
+	else{
+		if(eng_status=='0'){
+			CKEDITOR.instances['english'].setData("");
+		}
+	}
+	if(str_error==""){
+		$("#frm_add_email").submit();
+	}
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+
+//Check valid new Listes
+function checkvalid(){
+	var nameList = $("#ListeName").val();
+	//var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	var filename = $("#file").val();
+	var ext = $('#file').val().split('.').pop().toLowerCase();
+	var str_error="";
+	if($.trim(nameList)=="" || (checkOneMoreSpaceAndEmpty(nameList) && nameList.length>0))
+		str_error+="Name List not empty or have character special!</br>";
+	if(filename=="" || $.inArray(ext, ['xls','xlsx'])==-1)
+		str_error+="File upload empty or not true format!</br>";
+	if(str_error=="")
+		$("#frm_list").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+//Select list add new campaigns
+$( "#select_list" ).bind( "click", function() {	
+	var val_list = $("#liste_id").val();
+	var acitons_current = $("#acitons_current").val();
+	var j = 0;
+	if(acitons_current=="add"){
+		var id_email = "";
+	}else{
+		var id_email = $("#id_email").val();
+	}
+	var str_param = ''; 
+	var param_current = $("#param_fields").val();
+	if(val_list!="none"){
+		$('#upload_file').hide();
+		$('#down_excel_file').hide();
+	}else{
+		$('#upload_file').show();
+		$('#down_excel_file').show();
+	}
+	$("#list_val").val(val_list);
+	$("#status_list").val(val_list);
+		$.ajax({
+			type: "POST",
+			url: "/emails/ajaxLoadDataList",
+			data: { val_list: val_list,id_email:id_email },
+			dataType: "json",
+			})
+			.done(function( results ) {
+				var result = eval(results);
+				//get object last in array
+				var link_list_file = result[result.length-1];
+				//remove object last in array
+				result.pop();
+				//set data from array for add email
+				$.each(result, function (item, value) {
+					if(val_list!="none"){
+						$("#list_link").val(link_list_file);
+						if(j==0){		    	
+					    	str_param += value;
+					    	$("#btn_param_fields").hide();
+			            	j = 1;
+					    }else{
+					    	str_param += ','+value;
+					    }
+					}else{
+						$("#btn_param_fields").show();
+						str_param = value.Email.param_fields;
+					}
+				});
+				//Compare param_fields when select list
+				if(param_current!=""){
+					var result_compare = compareParam(param_current,str_param);
+					if(!result_compare){
+						//$("#compose-list").modal("hide");
+						$("#compose-list").modal("hide");
+						alert("Param fields Template: "+param_current+"\nParam fields List: "+str_param+"\nNot the same!\nCANCEL for select other Template or OK for use param fields List!");
+						$("#liste_id").val('none');
+						val_list = 'none';
+					}
+				}else{
+					$("#param_fields_tmp").val(str_param);
+					$("#param_fields").val(str_param);
+				}
+				//check for show button param fields
+				if(val_list=="none" && acitons_current=="add"){
+					$("#btn_param_fields").show();
+					str_param = '';
+				}
+				//Check list choosen or not choosen for on/off button upload file
+				if(val_list=='none'){
+					$("#upload_file").show();
+				}else{
+					$("#upload_file").hide();
+				}
+				//Compare param_fields 				
+				$("#compose-list").modal("hide");
+			});
+});
+//Create list from new campaign
+$( "#create_list" ).bind( "click", function() {
+	$("#frm_add_email").submit();
+});
+
+//Check liste valid add new campaigns
+function checkCampaignValid(){
+	var CampaignName = $("#CampaignName").val();
+//	var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	if($.trim(CampaignName)==""){
+		$("#msg_content").html("");
+		$("#msg_content").append("Name Campaign not empty !");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_campaign").submit();
+	}
+}
+//function edit email
+$( "#edit_mail" ).bind( "click", function() {
+	$("#frm_edit_mail").submit();
+});
+//function downexcel email
+$( "#downexcel" ).bind( "click", function() {
+	$("#frm_down_email").submit();
+});
+//Ajax change list in edit email
+$("#liste_id").change(function(){
+	  var list_id = $("#liste_id").val();
+	  
+	});
+//Upload file Contacts
+$( "#btn_upload_contact" ).bind( "click", function() {
+	var filename = $("#file").val();
+	var ext = $('#file').val().split('.').pop().toLowerCase();
+	if(filename=="" || $.inArray(ext, ['xls','xlsx'])==-1){
+		$("#msg_content").html("");
+		$("#msg_content").append("File upload empty or not true format!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_upload_file").submit();
+	}
+});
+function checkValidEditList(){
+	var nameList = $("#ListeName").val();
+	//var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	if($.trim(nameList)=="" || (checkOneMoreSpaceAndEmpty(nameList)==true && nameList.length>0)){
+		$("#msg_content").html("");
+		$("#msg_content").append("Name list can not empty or have character special!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_list").submit();
+	}
+}
+
+function checkValidAddContact(){
+	var ContactEmail = $("#ContactEmail").val();
+	var status_mail = $("#status_mail").val();
+	var ContactFullname= $("#ContactFullname").val();
+	var ContactFirstname= $("#ContactFirstname").val();
+	var ContactLastname= $("#ContactLastname").val();
+	var ContactPhone= $("#ContactPhone").val();
+	var ContactIdCard= $("#ContactIdCard").val();
+	var ContactAddress= $("#ContactAddress").val();
+	//alert(status_mail);
+	//var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	var str_error="";
+	if($.trim(ContactEmail)=="" ||(pattern.test(ContactEmail)==false && ContactEmail.length>0))
+		str_error+="Email can not empty or not true format!</br>";
+	if(status_mail==1)
+		str_error+="Email exist in list</br>";
+	if(checkOneMoreSpaceAndEmpty(ContactFullname) && ContactFullname.length>0)  //nho add them.
+		str_error+="Contact Fullname can not have special character!</br>";
+	if(checkOneMoreSpaceAndEmpty(ContactFirstname) && ContactFirstname.length>0)
+		str_error+="Firstname can not have special character!</br>";
+	if(checkOneMoreSpaceAndEmpty(ContactLastname) && ContactLastname.length>0)
+		str_error+="Lastname can not true format!</br>";
+	if(number.test(ContactPhone)==false && ContactPhone.length>0)
+		str_error+="Phone can not true format!</br>";
+	if(number.test(ContactIdCard)==false && ContactIdCard.length>0)
+		str_error+="ID card can not true format!</br>";
+	if(str_error=="")
+		$("#form_contact").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+//check duplicate email add contact
+$("#ContactEmail" ).blur(function() {
+	var email = $("#ContactEmail").val();
+	var liste = $("#ContactListes").val();
+	$.ajax({
+			type: "POST",
+			url: "/contacts/ajaxCheckEmail",
+			data: {email:email,liste:liste},
+				beforeSend : function(){
+					$(".btn-success").attr('disabled','disabled');
+				}
+			})
+			.done(function( results ) {
+				
+				if(results==='1'){
+					$("#status_mail").val(1);
+				}else{
+					$("#status_mail").val(0);
+				}
+				$(".btn-success").removeAttr('disabled');
+			});
+});
+
+
+
+//check duplicate username add user.
+$("#UserUsername" ).blur(function() {
+	var username = $("#UserUsername").val();
+	$.ajax({
+			type: "POST",
+			url: "/users/ajaxCheckUsername",
+			data: {username:username},
+				beforeSend : function(){
+					$(".btn-success").attr('disabled','disabled');
+				}
+			})
+			.done(function( results ) {
+				
+				if(results==='1'){
+					$("#status_username").val(1);
+				}else{
+					$("#status_username").val(0);
+				}
+				$(".btn-success").removeAttr('disabled');
+			});
+});
+//load param fields when choosen list in add contact
+$( "#ContactListes" ).change(function() {
+  var id_list = $("#ContactListes").val();
+	$.ajax({
+			type: "POST",
+			url: "/contacts/ajaxLoadParamField",
+			data: {id_list:id_list },
+			dataType: "json",
+			})
+			.done(function( results ) {
+				var result = eval(results);
+				$(".content input").attr('disabled','disabled');
+				$.each(result, function (item, value) {
+				var id_input = "";
+				switch(item) {
+						case 'email':
+							id_input = "ContactEmail";
+							break;
+						case 'phone':
+							id_input = "ContactPhone";
+							break;
+						case 'lastname':
+							id_input = "ContactLastname";
+							break;
+						case 'id_card':
+							id_input = "ContactIdCard";
+							break;
+						case 'firstname':
+							id_input = "ContactFirstname";
+							break;
+						default:
+							id_input = "ContactAddress";
+					}
+					$("#"+id_input).removeAttr('disabled');
+				});
+			});
+});
+function checkValidConfirmSend(){
+	var datesend = $("#EmailSendAt").val();
+	var timesend = $("#EmailTimeAt").val();
+	var arr_time = timesend.split(':');
+	var str_time = arr_time['0']+arr_time['1'];
+	var dt = new Date();
+	var time = dt.getHours() + "" + dt.getMinutes();
+	var check_time = str_time - time;
+	var str_error ="";
+	if($.trim(datesend)=="")
+		str_error +="Date send mail can not empty!</br>";
+	if($.trim(timesend)=="")
+		str_error +="Time send mail can not empty!</br>";
+	if(check_time<0)
+		str_error +="Time send mail can not lesser time current!";
+	if(str_error=="")
+		$("#form_confirmsend").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+}
+$( "#btn_search_rp" ).bind( "click", function() {
+	var start_date = $("#EmailStartDate").val();
+	var end_date = $("#EmailEndDate").val();
+	var str_error ="";
+	if(start_date=="")
+		str_error+="Start Date can not empty!</br>";
+	if(new Date(end_date) < new Date(start_date))
+		str_error+="Start Date can not smaller than End Date!";
+	if(str_error=="")
+		$("#form_report").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+		
+	}
+});
+
+$("#template_type_id").change(function(){
+	  var template_type_id = $("#template_type_id").val();
+	  $.ajax({
+			type: "POST",
+			url: "/emails/loadTemplateType",
+			data: {template_type_id:template_type_id },
+			dataType: "json",
+			})
+			.done(function( results ) {
+				var result = eval(results);
+				var data = [];
+				var arr = [];
+				var j = 0;
+				$.each(result, function (item, value) {
+					arr.push(value.Template.screenshot,"<a onclick='calAjaxLoadTmp(\""+value.Template.id+"\")' href='javascript:void(0)'>"+value.Template.subject+"</a>",value.Template.created);
+					data.push(arr);
+					arr = [];
+					j++;
+            	});
+				$("#example1").dataTable().fnDestroy();
+				$("#example1").css('width','558px');
+				$('#example1').dataTable({
+                    "aaData": data,
+                });
+			});
+	});
+
+function checkValidPhoto(){
+	var filename = $("#PhotoCloudinaryIdentifier").val();
+	var ext = $('#PhotoCloudinaryIdentifier').val().split('.').pop().toLowerCase();
+	if(filename=="" || $.inArray(ext, ['jpg','png','jpeg','gif'])==-1){
+		$("#msg_content").html("");
+		$("#msg_content").append("File upload empty or not true format!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_photo").submit();
+	}
+}
+function checkValidTemplateType(){
+	var name = $("#TemplateTypeName").val();
+	//var char_special = new RegExp(/^[a-zA-Z0-9- ]*$/);
+	if($.trim(name) == "" || (checkOneMoreSpaceAndEmpty(name)==true && name.length>0)){
+		$("#msg_content").html("");
+		$("#msg_content").append("Name can not empty or have character special!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_template_type").submit();
+	}
+}
+function checkValidRole(){
+	
+	var name = $("#RoleName").val();
+	if($.trim(name)=="" || (checkOneMoreSpaceAndEmpty(name)==true && name.length>0)){
+		$("#msg_content").html("");
+		$("#msg_content").append("Name can not empty or have character special!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_role").submit();
+	}
+}
+function checkValidDepartment(){
+	var name = $("#DepartmentName").val();
+	if($.trim(name)=="" || (checkOneMoreSpaceAndEmpty(name)==true && name.length>0)){
+		$("#msg_content").html("");
+		$("#msg_content").append("Name can not empty or have character special!");	
+		$("#msg_error").modal("show");
+	}else{
+		$("#frm_deparment").submit();
+	}
+}
+
+function disableValidAccount()
+{
+	$("#AccountApiKey input").attr('disabled','disabled');
+	$("#AccountApiSecret input").attr('disabled','disabled');
+	$("#AccountFromName input").attr('disabled','disabled');
+	$("#AccountFromEmail input").attr('disabled','disabled');
+	$("#AccountReplytoName input").attr('disabled','disabled');
+	$("#AccountReplytoEmail input").attr('disabled','disabled');
+	$("#AccountLimitSent input").attr('disabled','disabled');
+}
+function checkValidAccount()
+{
+	var title = $("#AccountTitle").val();
+	var logo = $("#AccountLogo").val();
+	var from_name = $("#AccountFromName").val();
+	var api_key = $("#AccountApiKey").val();
+	var api_secret = $("#AccountApiSecret").val();
+	var from_email = $("#AccountFromEmail").val();
+	var reply_name = $("#AccountReplytoName").val();
+	var reply_email = $("#AccountReplytoEmail").val();
+	var limit_sent = $("#AccountLimitSent").val();
+	var str_error ="";
+	if((checkOneMoreSpaceAndEmpty(title)==true && title.length>0) || $.trim(title)=="")
+		str_error+="Title can not empty and have character special!</br>";
+	if((checkOneMoreSpaceAndEmpty(logo)==true && logo.length>0) || $.trim(logo)=="")
+		str_error+="Logo can not empty and have character special!</br>";
+	if((checkOneMoreSpaceAndEmpty(api_key)==true && api_key.length>0) || $.trim(api_key)=="")
+		str_error+="Api key can not empty and have character special!</br>";
+	if((checkOneMoreSpaceAndEmpty(api_secret)==true && api_secret.length>0) || $.trim(api_secret)=="")
+		str_error+="Api secret can not empty and have character special!</br>";
+	if((checkOneMoreSpaceAndEmpty(from_name)==true && from_name.length>0) || $.trim(from_name)=="")
+		str_error+="From name can not empty or have character special!</br>";
+	if((pattern.test(from_email)==false &&  from_email.length >0) || $.trim(from_email)=="")
+		str_error+="Email not empty and not true format!</br>";
+	if(checkOneMoreSpaceAndEmpty(reply_name)==true && reply_name.length>0)
+		str_error+="Reply name can not have character special!</br>";
+	if(pattern.test(reply_email)==false && reply_email.length>0)
+		str_error+="Email reply not true format!</br>";
+	if($.trim(limit_sent)=="")
+		str_error+="Limit not empty!";
+	if(str_error=="")
+		$("#frm_account").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+	
+			
+}
+
+function checkValidUser(){
+	var UserFullname = $("#UserFullname").val();
+	var UserUsername= $("#UserUsername").val();
+	var UserPassword= $("#UserPassword").val();
+	var UserPhone= $("#UserPhone").val();
+	var UserEmail= $("#UserEmail").val();
+	var status_username = $("#status_username").val();
+	var str_error = "";
+	if($.trim(UserFullname)=="" || checkOneMoreSpaceAndEmpty(UserFullname))
+		str_error+="Fullname can not have character special</br>";
+	if(status_username==1)
+		str_error+="Username exists</br>";
+	if($.trim(UserUsername)=="" || alpha_number.test(UserUsername)==false)
+		str_error+="Username can not empty or have character special</br>";
+	if($.trim(UserPhone)=="" || (number.test(UserPhone)==false && UserPhone.length>0))
+		str_error+="Phone not true format!</br>";
+	if($.trim(UserPassword)=="")
+		str_error+="Password can not empty!</br>";
+	if($.trim(UserEmail)=="" || (UserEmail.length>0 && pattern.test(UserEmail)==false))
+		str_error+="Email not true format!";
+	if(str_error=="")
+		$("#frm_user").submit();
+	else
+	{
+		$("#msg_content").html("");
+		$("#msg_content").append(str_error);	
+		$("#msg_error").modal("show");
+	}
+	
+}
+$( "#name_model" ).change(function() {
+	$("#frm_acl").submit();
+});
+
+function addlistcontact(){	  
+	var oTable = $("#example1").dataTable();
+	var allNodes = oTable.fnGetNodes();
+	var checklist = $(allNodes).find("input[name=cont_id]:checked");
+	var str = "";
+	$(checklist).each(function(i, val){
+		str += $(val).attr('id')+",";
+	});
+	alert(str);
+}

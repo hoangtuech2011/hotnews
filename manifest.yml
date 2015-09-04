@@ -1,0 +1,11 @@
+applications:
+- services:
+  - ClearDB MySQL Database-zn
+  disk_quota: 1024M
+  buildpack: php_buildpack
+  host: hotnews
+  name: hotnews
+  path: .
+  domain: mybluemix.net
+  instances: 1
+  memory: 128M

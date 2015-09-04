@@ -1,0 +1,156 @@
+/* Custom CSS for Kendo Framework */
+.k-dropdown-wrap, .k-picker-wrap, .k-input, .k-list-container, .k-item:hover, .k-state-focused, .k-pager-wrap > a, .k-pager-wrap > span > input, .k-tabstrip-items .k-item, .k-numeric-wrap, .alertify-log, .alertify, div[data-role="pager"]{
+	-webkit-border-radius: 0!important;
+    -moz-border-radius: 0!important;
+    border-radius: 0!important;
+}
+.k-numeric-wrap.k-state-hover, .k-dropdown-wrap.k-state-hover, .k-picker-wrap.k-state-hover{
+	background-color: transparent !important;
+}
+.k-dropdown-wrap{
+	height: 30px;
+}
+.k-dropzone{
+	padding: .8em 0 !important;
+}
+.k-grid-header, .k-header{
+	background-color: white !important;
+}
+.k-animation-container div[role="option"]{
+	padding: 5px;
+}
+.checkbox-container{
+	max-height: 300px;
+}
+/*--- overflow-y ---*/
+.checkbox-container, #account_listview, #used_listview{
+	overflow-y: scroll;
+}
+span.tooltips, span.tooltip1s {
+    width: 20px;
+    height: 20px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
+    border: 0;
+    -moz-box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    -moz-transition:  -moz-box-shadow .3s;
+    -webkit-transition:  -webkit-box-shadow .3s;
+    transition:  box-shadow .3s;
+    background-image:url(../../img/icons/help.png) !important;
+    background-repeat:no-repeat;
+    background-position: center center;
+}
+span.tooltips:hover, span.tooltip1s:hover {
+    -moz-box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 15px rgba(0,0,0,0.5);
+    -moz-transition:  -moz-box-shadow .3s;
+    -webkit-transition:  -webkit-box-shadow .3s;
+    transition:  box-shadow .3s;
+}
+.k-required{
+    color: #990000;
+    margin-bottom: 0;
+}
+/* Modal, Notify */
+.alertify-log{
+	
+}
+/* DropdownList */
+#div_select .k-widget {
+	background-color: transparent;
+}
+#div_select .k-dropdown {
+	border-width: 1px;
+}
+#div_select .k-dropdown-wrap{
+	border-width: 0px;
+}
+/* ------ DataTable ------ */
+#grid > .k-grid-header > .k-grid-header-wrap > table > thead > tr > th, .k-pager-wrap, .k-pager-wrap .k-link, .k-pager-wrap .k-link:hover{
+	background-color: white !important;
+	color: black !important;
+}
+#grid > .k-grid-header > .k-grid-header-wrap > table > thead > tr > th, table[role="grid"] a, table[role="grid"] .k-header{
+	color: #3c8dbc !important;
+	text-align: center !important;
+	font-weight: bold !important;
+}
+#grid > .k-grid-content {
+	max-height: 450px;
+}
+#grid > .k-grid-content > table > tbody > tr > td{
+	border-bottom-width: 1px;
+	/*text-align: center;*/
+}
+#grid > .k-grid-content > table > tbody > tr:nth-child(odd){
+	background-color: #f5f5f5;
+}
+.k-pager-wrap .k-link:nth-child(2) {
+	border-right: 1px solid #CCC;
+}
+/*
+#txt_account_id-list .k-item > span {
+	display: inline-block;
+	box-sizing: border-box;
+	vertical-align: middle;
+	padding: 5px;
+}
+#txt_account_id-list .k-item > span:first-child{
+    width: 110px;
+}
+#txt_account_id-list .k-item > span:last-child{
+    margin-left: 110px;
+}
+#txt_account_id-list .k-item > span > p {
+	font-weight: bold;
+}
+#txt_account_id-list .k-item > span > img {
+	width: 110px;
+	height: 70px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+}
+*/
+/* Tab */
+.k-tabstrip-items .k-item.k-state-active{
+	border-top-color: #0073b7;
+}
+.k-tabstrip:focus{
+	box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+}
+.k-tabstrip>.k-content, .k-panelbar .k-tabstrip>.k-content{
+	margin-right: 0!important;
+}
+/* ------ Account tab ------ */
+#account_listview .k-widget, .k-widget *{
+	/*box-sizing: border-box !important;*/
+	-webkit-box-sizing: border-box !important;
+}
+#account_listview, #used_listview{
+	max-height: 450px;
+}
+#account_listview div:nth-child(odd), #used_listview div:nth-child(odd){
+	margin-left: 25px;
+}
+#account_listview p, #used_listview p{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+#account_listview p img, #used_listview p img{
+	height: 100px;
+	width: 100%;	
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+}
+/* ------ Couples tab ------ */
+#grid_user_extension .k-pager-wrap{
+	padding-bottom: 0 !important;
+}
+#user_extension_listview .tagitemcls{
+	top: 2px !important;
+	left: 72%;
+}
