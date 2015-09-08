@@ -24,12 +24,8 @@
 								<div class="col-xs-9 text-left"><?php echo $this->Form->input('name', array('class' => 'form-control', 'placeholder' => 'Name','label' => false));?></div>
 							</div>
 							<div class="col-xs-12 form-group">
-								<div class="col-xs-3 text-light-blue text-bold text-right"><label>Name no unicode <i class="fa fa-asterisk fa-lg"></i></label></div>
-								<div class="col-xs-9 text-left"><?php echo $this->Form->input('name_no_unicode', array('class' => 'form-control', 'placeholder' => 'Name No Unicode','label' => false));?></div>
-							</div>
-							<div class="col-xs-12 form-group">
-								<div class="col-xs-3 text-light-blue text-bold text-right"><label>Position <i class="fa fa-asterisk fa-lg"></i></label></div>
-								<div class="col-xs-9 text-left"><?php echo $this->Form->input('position', array('class' => 'form-control', 'placeholder' => 'Position', 'type' => 'number', 'label' => false));?></div>
+								<div class="col-xs-3 text-light-blue text-bold text-right"><label>Parent <i class="fa fa-asterisk fa-lg"></i></label></div>
+								<div class="col-xs-9 text-left"><?php echo $this->Form->input('parent_id', array('class' => 'form-control', 'type' => 'select','options' => $categories,'empty' => array(''=> 'Not parent'),'label' => false));?></div>
 							</div>
 							<div class="form-group">
 								<div class="col-xs-3 text-light-blue text-bold text-right"><label>Show <i class="fa fa-asterisk fa-lg"></i></label></div>

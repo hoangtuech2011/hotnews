@@ -33,7 +33,7 @@ class HomeController extends AppController {
 		$categories = $this->Category->find('all',array(
 			'fields' => array('id','name','name_no_unicode','location'),
 			'order' => array('position' => 'ASC'),
-			'conditions' => array('active' => 1)	
+			'conditions' => array('active' => 1, 'parent_id' => null)	
 		));
 		return $categories;
 	}
@@ -100,9 +100,9 @@ class HomeController extends AppController {
 	{
 		$option['joins'] = $joins;
 		if($category_id>0)
-			$option['conditions'] = array('category_id' => $category_id,'views >0','not'=> array('url_image' => null));
+			$option['conditions'] = array('category_id' => $category_id,'not'=> array('url_image' => null));
 		else
-			$option['conditions'] = array('views >0','not'=> array('url_image' => null));
+			$option['conditions'] = array('not'=> array('url_image' => null));
 		$option['fields'] = array('Category.name_no_unicode','address','title','url_image','description','views','title_no_unicode');
 		$option['limit'] = 5;
 		$option['order'] = array('views' => 'desc');
@@ -123,6 +123,7 @@ class HomeController extends AppController {
 												)
 									)
 								),
+						//'conditions' => array('New.title_no_unicode','url_image !=""','hot' => $hot, 'Category.id' => $category_id),
 						'conditions' => array('url_image !=""','hot' => $hot, 'Category.id' => $category_id),
 						'fields' => array('address','title','url_image','description','title_no_unicode'),
 						'limit' => $limit,
@@ -131,8 +132,18 @@ class HomeController extends AppController {
 				));
 		return $news;
 	}
-	public function category($name_no_unicode = null, $title_no_unicode = null)
+	private function loadChildCategory($category_id)
 	{
+		$childCategory = $this->Category->find('all', array(
+			'conditions' => array('parent_id' => $category_id),
+			'fields' => array('id','name', 'name_no_unicode')	
+		));
+		return $childCategory;
+	}
+	public function category()
+	{
+		$count = count($this->request->params['pass']);
+		$title_no_unicode = $this->request->params['pass'][$count -1];
 		$error = false;
 		$this->loadModel('New');
 		$joins = array(
@@ -144,7 +155,7 @@ class HomeController extends AppController {
 				)
 		);
 		$this->loadModel('News');
-		if($title_no_unicode!="")
+		if(strpos($title_no_unicode, ".html")>0)
 		{
 			$title = explode(".", $title_no_unicode);
 			$new = $this->News->find('all',array(
@@ -160,7 +171,7 @@ class HomeController extends AppController {
 		$this->loadModel('Category');
 		$this->Category->recursive = -1;
 		$category = $this->Category->find('first',array(
-			'conditions' => array('name_no_unicode' => $name_no_unicode),
+			'conditions' => array('name_no_unicode' => $title_no_unicode),
 			'fields' => 'id'	
 		));
 		//echo "<pre>"; print_r($category); die();
@@ -171,8 +182,10 @@ class HomeController extends AppController {
 		$currentTime = "Today is " .date("l"). date(" d/m/Y h:i:sa") . "<br>";
 		$high_lights = $this->getHighLights($category['Category']['id'], $joins);
 		$last_news = $this->getLastNews($category['Category']['id'], $joins);
-		$most_view_news = $this->getMostViewedNews($category['Category']['id'], $joins); 
-		$this->set(compact('error','hot_news','hnews','news','categories','currentTime','high_lights','last_news','most_view_news'));
+		$most_view_news = $this->getMostViewedNews($category['Category']['id'], $joins);
+		$child_categories = $this->loadChildCategory($category['Category']['id']);
+		//echo "<pre>"; print_r($child_category); die(); 
+		$this->set(compact('child_categories','error','hot_news','hnews','news','categories','currentTime','high_lights','last_news','most_view_news'));
 	}	
 	
 	

@@ -28,10 +28,6 @@
 							<div class="col-xs-9 right-box"><?php echo h($category['Category']['name_no_unicode']); ?></div>
 						</div>
 						<div class="col-xs-12 form-group">
-							<div class="col-xs-3 left-box"><?php echo __('Position'); ?></div>
-							<div class="col-xs-9 right-box"><?php echo h($category['Category']['position']); ?></div>
-						</div>
-						<div class="col-xs-12 form-group">
 							<div class="col-xs-3 left-box"><?php echo __('Show'); ?></div>
 							<div class="col-xs-9 right-box"><?php echo h($category['Category']['show']) ? '<span class="label label-success flat">Show</span>' : '<span class="label label-default text-white flat">Hidden</span>';?></div>
 						</div>

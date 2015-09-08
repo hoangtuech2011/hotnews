@@ -15,7 +15,23 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
         //////////////This Theme Design and Developed //////////////////////
         //////////// by www.wpfreeware.com======================-->*/
 
-
+.boder_bottom{
+	border-bottom: 1px solid black;
+}
+ul.sub_category {list-style-type: square;font-size:12px;}
+ul.sub_category li{
+	margin-left: 25px;
+}
+ul.sub_category li a{
+	color: gray;
+}
+.div_sub_category{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+ul.sub_category li a:hover{
+	color: blue;
+}
 body {
 background:#f5f5f5;
 }
@@ -27,7 +43,7 @@ ul{
 }
 
 a{ 
-  text-decoration: none;
+  text-decoration: none !important;
   color: #2f2f2f;
   
 }
@@ -1102,8 +1118,8 @@ figure.effect-layla:hover img {
   height: 100%;
 }
 .single_sidebar ul li a{
-  border-bottom: 1px solid #333;
-  display: block;
+  	/*border-bottom: 1px solid #333;*/
+	display: block;
 }
 .single_sidebar .spost_nav li a{
   border-bottom: none;

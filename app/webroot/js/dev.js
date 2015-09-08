@@ -62,6 +62,10 @@ var checkNew = function(category_name, hot, id){
       });
 };
 $(document).ready(function(){
+	$("div.child_category a").click(function(){
+		var href = $(this).attr('href');
+		window.location.href = href;
+	});
 	$("div#index a").click(function()
 	{
 	  var href = $(this).attr('href');
@@ -72,4 +76,5 @@ $(document).ready(function(){
 		});
 		return false;
 	});
+	
 });

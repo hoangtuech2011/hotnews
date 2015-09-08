@@ -21,6 +21,7 @@ class SettingsController extends AppController {
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
+		$this->loadModel('Category');
 	}
 /**
  * index method
@@ -28,18 +29,12 @@ class SettingsController extends AppController {
  * @return void
  */
 	public function index() {
-		$text = "noo-phuoc-thinh&,-thuy-tien-chia-tay-trong-mua";
-		$twe = preg_replace("/[^A-Za-z0-9-]/", '', $text);
-		//$twe = str_replace("/[A-Za-z0-9_]+/g", " ", $text);
-		echo $twe; die();
-		
 		$this->Setting->recursive = 0;
 		$this->Paginator->settings['order'] = array('id' => 'desc');
 		$this->Paginator->settings['limit'] = 1000;
 		$this->set('settings', $this->Paginator->paginate());
-
 	}
-
+	
 /**
  * view method
  *
@@ -71,7 +66,8 @@ class SettingsController extends AppController {
 			}
 		}
 		$pages = $this->Setting->Page->find('list');
-		$categories = $this->Setting->Category->find('list');
+		$categories = $this->treeMenu();//$this->Setting->Category->find('list');
+		$this->set(compact('pages', 'categories'));
 		
 	}
 
@@ -98,7 +94,7 @@ class SettingsController extends AppController {
 			$this->request->data = $this->Setting->find('first', $options);
 		}
 		$pages = $this->Setting->Page->find('list');
-		$categories = $this->Setting->Category->find('list');
+		$categories = $categories = $this->treeMenu();//$this->Setting->Category->find('list');
 		$this->set(compact('pages', 'categories'));
 	}
 	
@@ -119,7 +115,7 @@ class SettingsController extends AppController {
 			$this->request->data = $this->Setting->find('first', $options);
 		}
 		$pages = $this->Setting->Page->find('list');
-		$categories = $this->Setting->Category->find('list');
+		$categories = $this->treeMenu();//$this->Setting->Category->find('list');
 		$this->set(compact('pages', 'categories'));
 	}
 
@@ -228,7 +224,7 @@ class SettingsController extends AppController {
 					{ 
 						echo "title:".strip_tags($a->title) . "<br>";
 						$temp = str_replace(" ", "-", strtolower($this->stripUnicode(strip_tags($a->title))));
-						echo "title_no_unicode:".preg_replace("/[^A-Za-z0-9-]/", '', $temp);
+						echo "title_no_unicode:".preg_replace("/[^A-Za-z0-9-]/", '', $temp). "<br>";
 					}
 					if (!filter_var($a->href, FILTER_VALIDATE_URL) === false)
 						echo "href".$a->href ."<br>";
@@ -264,6 +260,7 @@ class SettingsController extends AppController {
 		if (empty($id)) {
 			$options['conditions'] = array('Setting.active' => 1);
 			$settings = $this->Setting->find('all',$options);
+			//echo "<pre>"; print_r($settings); die();
 			foreach ($settings as $setting)
 			{
 				$link = $setting['Setting']['link'];

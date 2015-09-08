@@ -97,4 +97,20 @@ public $components = array(
     	}
     	return $str;
     }
+    
+    
+    public function treeMenu($parentid = NULL,$space = '', $trees = NULL){
+    
+    	if(!$trees) $trees = array();
+    	$results = $this->Category->find('all',array('conditions'=>array('parent_id'=>$parentid)));
+    	if($results!=''){
+    		foreach($results as $result){
+    			$trees [$result['Category']['id']] = $space.$result['Category']['name'];
+    			$trees = $this->treeMenu($result['Category']['id'],$space.'--',$trees);
+    		}
+    			
+    	}
+    
+    	return $trees;
+    }
 }

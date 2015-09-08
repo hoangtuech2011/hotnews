@@ -87,26 +87,13 @@ Cache::config('default', array('engine' => 'File'));
  *
  * ));
  */
-define('BODY_1', 'Thời sự');
-define('BODY_1_1', '#news');
-define('BODY_1_2', '#news_nav');
-define('BODY_2', 'Giải trí');
-define('BODY_2_1', '#entertainment');
-define('BODY_2_2', '#entertainment_nav');
-define('BODY_3', 'Khoa học');
-define('BODY_3_1', '#science');
-define('BODY_3_2', '#science_nav');
-define('BODY_4', 'Hình ảnh');
-define('BODY_5', 'Video');
-define('BODY_5_1', '#video');
-define('BODY_6', 'Thể thao');
-define('BODY_6_1', '#sport');
-define('BODY_6_2', '#sport_nav');
+
 //define('BODY_7', '#sport_nav');
 //define('BODY_7_1', '#sport_nav');
 define('LAST_POST', 'Bài viết mới nhất');
 define('LAST_NEWS', 'Tin mới nhất');
 define('POPULAR_POST', 'Tin xem nhiều nhất');
+define('ALIAS_CATEGORY', ($_SERVER['REQUEST_URI']==="/") ? "tin-tuc/": "");
 define('HOT', 1);
 define('NORMAL', 0);
 

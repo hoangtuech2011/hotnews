@@ -22,9 +22,12 @@ class CategoriesController extends AppController {
  */
 	public function index() {
 		$this->Category->recursive = 0;
+		$this->Paginator->settings = array(
+				'order' => array('id' => 'desc'),
+				'limit' => 1000
+		);
 		$this->set('categories', $this->Paginator->paginate());
 	}
-
 /**
  * view method
  *
@@ -57,12 +60,13 @@ class CategoriesController extends AppController {
 				$this->Session->setFlash(__('The category could not be saved. Please, try again.'));
 			}
 		}
+		$categories = $this->treeMenu();
 		$location = array(
 				'0' => 'Both',
 				'1'	=> 'Left',
 				'2' => 'Right'
 		);
-		$this->set(compact('location'));
+		$this->set(compact('location','categories'));
 	}
 
 /**
@@ -77,6 +81,7 @@ class CategoriesController extends AppController {
 			throw new NotFoundException(__('Invalid category'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+			$this->request->data['Category']['name_no_unicode'] = str_replace(" ", "-", strtolower($this->stripUnicode($this->request->data['Category']['name'])));
 			if ($this->Category->save($this->request->data)) {
 				$this->Session->setFlash(__('The category has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -92,7 +97,8 @@ class CategoriesController extends AppController {
 				'1'	=> 'Left',
 				'2' => 'Right'
 		);
-		$this->set(compact('location'));
+		$categories = $this->treeMenu();
+		$this->set(compact('location','categories'));
 	}
 
 /**
